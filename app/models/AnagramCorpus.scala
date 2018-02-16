@@ -122,7 +122,10 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
 
   private def isAnagrams(test: Set[String], key: String) = test forall (_.sorted == key)
 
-  private[this] def findAnagrams(word: String) = store.getOrElse(key(word), Set.empty) filterNot (word ==)
+  private[this] def findAnagrams(word: String): Anagrams = {
+    val anagrams = store.getOrElse(key(word), Set.empty)
+    if (anagrams.contains(word)) anagrams filterNot (word==) else Set.empty
+  }
 
 }
 

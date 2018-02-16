@@ -119,6 +119,8 @@ Suggestions for documentation topics include:
 
 # Deliverable
 ---
+[![Play](https://img.shields.io/badge/play-v2.6.7-green.svg)](https://www.playframework.com)  
+
 ## Run Locally
 Install sbt
 
@@ -131,7 +133,7 @@ Then run sbt.
     open http://localhost:9000
 
 ##  Postman Docs and Production
-https://documenter.getpostman.com/view/57941/ibotta-anagrams/RVfwiB2B
+https://cryptic-lowlands-2611.herokuapp.com
 
 ## Testing
 

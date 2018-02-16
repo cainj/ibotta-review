@@ -1,9 +1,12 @@
 package models
 
 import akka.actor.Actor
-
 import scala.util.Try
 
+/**
+  * Thread safe actor the analyzes the data store for metric related data.
+  *
+  */
 class Analyzer extends Actor {
   private[this] var average: Double = 0
   private[this] var min: Int = 0

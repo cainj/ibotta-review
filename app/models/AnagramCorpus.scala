@@ -11,6 +11,11 @@ import scala.concurrent.{ Future, Promise }
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
+/**
+ * Thread safe actor that manages the data store for the anagrams.
+ *
+ * @param dictionary The english dictionary
+ */
 @Singleton
 class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
 

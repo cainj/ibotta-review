@@ -126,6 +126,23 @@ Install sbt
 
 Then run sbt.
 
+    cd ibotta-review
     sbt run ( or sbt if you have it setup)
     open http://localhost:9000
-# ibotta-review
+
+##  Postman Docs and Production
+https://documenter.getpostman.com/view/57941/ibotta-anagrams/RVfwiB2B
+
+## Testing
+
+#### Test and Code coverage
+
+For testing and code coverage run the following commands.
+
+    cd ibotta-review
+    sbt clean coverage test
+    sbt coverageReport
+    
+
+You can look at coverage metrics in the ibotta-review/target/scala-2.12/scoverage-report/index.html
+

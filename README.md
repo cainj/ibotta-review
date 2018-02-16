@@ -119,6 +119,8 @@ Suggestions for documentation topics include:
 
 # Deliverable
 ---
+[![Play](https://img.shields.io/badge/play-v2.6.7-green.svg)](https://www.playframework.com)  
+
 ## Run Locally
 Install sbt
 

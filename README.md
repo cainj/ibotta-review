@@ -133,7 +133,7 @@ Then run sbt.
     open http://localhost:9000
 
 ##  Postman Docs and Production
-https://documenter.getpostman.com/view/57941/ibotta-anagrams/RVfwiB2B
+https://cryptic-lowlands-2611.herokuapp.com
 
 ## Testing
 

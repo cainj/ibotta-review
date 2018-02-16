@@ -7,10 +7,10 @@ import play.api.Configuration
 import scala.io.Source
 
 /**
-  * Handles the dictionary words read from the configuration file.
-  *
-  * @param config The application configuration
-  */
+ * Handles the dictionary words read from the configuration file.
+ *
+ * @param config The application configuration
+ */
 class Dictionary @Inject() (config: Configuration) {
 
   private[this] val dictionary = new scala.collection.mutable.TreeMap[String, String]()

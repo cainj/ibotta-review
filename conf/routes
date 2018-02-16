@@ -4,16 +4,16 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                             controllers.HomeController.index
-DELETE  /anagrams/$word<[a-z]+>.json  controllers.HomeController.deleteAnagrams(word: String)
-GET     /anagrams/$word<[a-z]+>.json  controllers.HomeController.anagrams(word: String, limit: Option[Int])
-GET     /anagrams/max                 controllers.HomeController.maxAnagrams
-POST    /anagrams/check               controllers.HomeController.check
-GET     /anagrams/stats               controllers.HomeController.stats
-GET     /anagrams/filter/:size        controllers.HomeController.filter(size: Int)
-DELETE  /words/$word<[a-z]+>.json     controllers.HomeController.deleteWord(word: String)
-DELETE  /words.json                   controllers.HomeController.delete
-POST    /words.json                   controllers.HomeController.createAnagrams
+GET     /                             controllers.AnagramsController.index
+DELETE  /anagrams/$word<[a-z]+>.json  controllers.AnagramsController.deleteAnagrams(word: String)
+GET     /anagrams/$word<[a-z]+>.json  controllers.AnagramsController.anagrams(word: String, limit: Option[Int])
+GET     /anagrams/max                 controllers.AnagramsController.maxAnagrams
+POST    /anagrams/check               controllers.AnagramsController.check
+GET     /anagrams/stats               controllers.AnagramsController.stats
+GET     /anagrams/filter/:size        controllers.AnagramsController.filter(size: Int)
+DELETE  /words/$word<[a-z]+>.json     controllers.AnagramsController.deleteWord(word: String)
+DELETE  /words.json                   controllers.AnagramsController.delete
+POST    /words.json                   controllers.AnagramsController.createAnagrams
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -119,6 +119,13 @@ Suggestions for documentation topics include:
 
 # Deliverable
 ---
+## Run Locally
+Install sbt
 
-Please provide the code for the assignment either in a private repository (GitHub or Bitbucket) or as a zip file. If you have a deliverable that is deployed on the web please provide a link, otherwise give us instructions for running it locally.
+    brew install sbt
+
+Then run sbt.
+
+    sbt run ( or sbt if you have it setup)
+    open http://localhost:9000
 # ibotta-review

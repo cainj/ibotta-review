@@ -1,10 +1,15 @@
 aardvark
 aardwolf
+ate
 bar
+bare
+bear
 foo
+eat
 dare
 dear
 read
 red
 tale
+tea
 teal

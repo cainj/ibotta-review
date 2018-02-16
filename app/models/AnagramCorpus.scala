@@ -34,6 +34,7 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
     case GetAnagrams(word, limit) => get(word, limit) pipeTo sender
     case DeleteAnagrams(word) => deleteAnagrams(word) pipeTo sender
     case FilterBySize(size) => filter(size) pipeTo sender
+    case Corpus => sender ! store.values
     case CheckAnagrams(words: Set[String]) =>
       val lowerCase = words.map(_.toLowerCase)
       sender ! isAnagrams(lowerCase, lowerCase.head.sorted)
@@ -94,7 +95,7 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
     if (anagrams.nonEmpty) store = store + (key(word) -> anagrams)
     else store = store - key(word)
     analyzer ! Analyze(store)
-    promise success anagrams.contains(word)
+    promise success !anagrams.contains(word)
     f
   }
 

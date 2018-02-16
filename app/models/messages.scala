@@ -8,6 +8,8 @@ case object GetStats
 
 case object MaxAnagrams
 
+case object Corpus
+
 case class Delete(word: String)
 
 case class DeleteAnagrams(word: String)

@@ -5,6 +5,7 @@
 
 # An example controller showing a sample home page
 GET     /                             controllers.AnagramsController.index
+GET     /corpus                       controllers.AnagramsController.corpus
 DELETE  /anagrams/$word<[a-z]+>.json  controllers.AnagramsController.deleteAnagrams(word: String)
 GET     /anagrams/$word<[a-z]+>.json  controllers.AnagramsController.anagrams(word: String, limit: Option[Int])
 GET     /anagrams/max                 controllers.AnagramsController.maxAnagrams

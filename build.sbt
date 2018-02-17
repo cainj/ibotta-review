@@ -1,6 +1,6 @@
 import scoverage.ScoverageKeys.{coverageExcludedPackages, coverageFailOnMinimum, coverageHighlighting, coverageMinimum}
 
-name := """anagram"""
+name := """ibotta anagrams"""
 organization := "com.example"
 
 version := "1.0-SNAPSHOT"

@@ -91,7 +91,7 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
   def deleteWord(word: String): Future[Boolean] = {
     val promise: Promise[Boolean] = Promise.apply()
     val f = promise.future
-    val anagrams = findAnagrams(word)
+    val anagrams = findAnagrams(word, delete = true)
     if (anagrams.nonEmpty) store = store + (key(word) -> anagrams)
     else store = store - key(word)
     analyzer ! Analyze(store)
@@ -122,9 +122,9 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
 
   private def isAnagrams(test: Set[String], key: String) = test forall (_.sorted == key)
 
-  private[this] def findAnagrams(word: String): Anagrams = {
+  private[this] def findAnagrams(word: String, delete: Boolean = false): Anagrams = {
     val anagrams = store.getOrElse(key(word), Set.empty)
-    if (anagrams.contains(word)) anagrams filterNot (word==) else Set.empty
+    if (anagrams.contains(word)) anagrams filterNot (word==) else if (delete) anagrams else Set.empty
   }
 
 }

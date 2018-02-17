@@ -52,18 +52,21 @@ class AnagramsController @Inject() (
     }
   }
 
-  def createAnagrams = Action.async(parse.tolerantJson) { request =>
+  def createAnagrams(allowProper: Option[Boolean]) = Action.async(parse.tolerantJson) { request =>
     asyncWithRecover {
       val anagrams = request.body.as[CreateAnagrams]
-      (corpusActor ? CreateAnagrams(anagrams.words)).mapTo[Boolean] map {
-        case true => Ok
-        case false => InternalServerError(Json.toJson(JsThrowable("Unable to store anagrams", "Cause is unknown.")))
+      if (!allowProper.getOrElse(true) && anagrams.words.exists(isCapital)) Future.successful(NotAcceptable)
+      else {
+        (corpusActor ? CreateAnagrams(anagrams.words)).mapTo[Boolean] map {
+          case true => Ok
+          case false => InternalServerError(Json.toJson(JsThrowable("Unable to store anagrams", "Cause is unknown.")))
+        }
       }
     }
   }
 
   def corpus = asyncRecover { implicit request =>
-    (corpusActor ? Corpus).mapTo[Iterable[Anagrams]] map { anagrams =>
+    (corpusActor ? Corpus).mapTo[Iterable[List[String]]] map { anagrams =>
       Ok(Json.toJson(anagrams))
     }
   }
@@ -121,4 +124,5 @@ class AnagramsController @Inject() (
     }
   }
 
+  private[this] def isCapital(word: String) = word.headOption exists { c => c.isUpper }
 }

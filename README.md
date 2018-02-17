@@ -142,9 +142,7 @@ https://cryptic-lowlands-2611.herokuapp.com
 For testing and code coverage run the following commands.
 
     cd ibotta-review
-    sbt clean coverage test
-    sbt coverageReport
-    
+    sbt clean coverage test coverageReport
 
 You can look at coverage metrics in the ibotta-review/target/scala-2.12/scoverage-report/index.html
 

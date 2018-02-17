@@ -22,9 +22,10 @@ class ApiSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
       val baseUrl = s"http://localhost:3333"
       val ws = app.injector.instanceOf(classOf[WSClient])
-      var json = Json.parse("""{
+      var json = Json.parse("""
+                              |{
                               |  "words": [
-                              |  	  "eat",
+                              |  	 "Eat",
                               |    "ate",
                               |    "tea"
                               |  ]
@@ -33,33 +34,46 @@ class ApiSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       var createAnagrams = Await.result(ws.url(s"$baseUrl/words.json").post(json), Duration(5, "seconds"))
       createAnagrams.status mustBe OK
 
-      json = Json.parse("""
-          |{
-          |  "words": [
-          |  	 "eat",
-          |    "at",
-          |    "tea"
-          |  ]
-          |}
-        """.stripMargin)
-
-      val createAnagramsError = Await.result(ws.url(s"$baseUrl/words.json").post(json), Duration(5, "seconds"))
-      createAnagramsError.status mustBe BAD_REQUEST
-
       json = Json.parse("""{
                               |  "words": [
-                              |  	  "eat",
+                              |  	 "Eat",
                               |    "ate",
                               |    "tea"
                               |  ]
                               |}""".stripMargin)
 
+      createAnagrams = Await.result(ws.url(s"$baseUrl/words.json?allowProper=false").post(json), Duration(5, "seconds"))
+      createAnagrams.status mustBe NOT_ACCEPTABLE
+
+      json = Json.parse("""
+                          |{
+                          |  "words": [
+                          |  	 "eat",
+                          |    "at",
+                          |    "tea"
+                          |  ]
+                          |}
+                        """.stripMargin)
+
+      val createAnagramsError = Await.result(ws.url(s"$baseUrl/words.json").post(json), Duration(5, "seconds"))
+      createAnagramsError.status mustBe BAD_REQUEST
+
+      json = Json.parse("""
+                          |{
+                          |  "words": [
+                          |  	 "eat",
+                          |    "ate",
+                          |    "tea"
+                          |  ]
+                          |}""".stripMargin)
+
       val checkAnagram = Await.result(ws.url(s"$baseUrl/anagrams/check").post(json), Duration(5, "seconds"))
       checkAnagram.status mustBe OK
 
-      json = Json.parse("""{
+      json = Json.parse("""
+                          |{
                           |  "words": [
-                          |  	  "eat",
+                          |  	 "eat",
                           |    "at",
                           |    "tea"
                           |  ]
@@ -78,13 +92,13 @@ class ApiSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
       filterResponse = Await.result(ws.url(s"$baseUrl/anagrams/filter/2").get(), Duration(5, "seconds"))
       filterResponse.status mustBe OK
-      filterResponse.json.as[List[Anagrams]] mustBe List(Anagrams(Set("eat", "ate", "tea")))
+      filterResponse.json.as[List[Anagrams]] mustBe List(Anagrams(Set("Eat", "ate", "tea")))
 
       var anagramsResponse = Await.result(ws.url(s"$baseUrl/anagrams/ate.json?limit=1").get(), Duration(5, "seconds"))
       anagramsResponse.status mustBe OK
-      anagramsResponse.json.as[Anagrams] mustBe Anagrams(Set("eat"))
+      anagramsResponse.json.as[Anagrams] mustBe Anagrams(Set("Eat"))
 
-      val deleteWord = Await.result(ws.url(s"$baseUrl/words/eat.json").delete(), Duration(5, "seconds"))
+      val deleteWord = Await.result(ws.url(s"$baseUrl/words/Eat.json").delete(), Duration(5, "seconds"))
       deleteWord.status mustBe NO_CONTENT
 
       anagramsResponse = Await.result(ws.url(s"$baseUrl/anagrams/ate.json").get(), Duration(5, "seconds"))

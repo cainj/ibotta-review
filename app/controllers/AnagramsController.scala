@@ -5,7 +5,6 @@ import javax.inject._
 import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
-import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
 

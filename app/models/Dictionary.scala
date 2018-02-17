@@ -13,7 +13,7 @@ import scala.io.Source
  */
 class Dictionary @Inject() (config: Configuration) {
 
-  private[this] val dictionary = new scala.collection.mutable.TreeMap[Int, String]()
+  private[this] val dictionary = new scala.collection.mutable.HashMap[Int, String]()
 
   load(Source.fromInputStream(getClass.getResourceAsStream(config.get[String]("dictionary.file"))).getLines())
 

@@ -77,7 +77,7 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
    * Gets the anagrams
    *
    * @param word The word.
-   * @param limit The number ofr anagrams to get.
+   * @param limit The number of anagrams to get.
    * @return
    */
   def get(word: String, limit: Option[Int] = None): Future[Anagrams] = {

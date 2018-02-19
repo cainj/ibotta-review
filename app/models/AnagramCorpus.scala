@@ -117,7 +117,7 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
     } else sender() ! akka.actor.Status.Failure(new IllegalArgumentException("Invalid word found in the list."))
     f
   }
-  
+
   private[this] def key(word: String) = word.toLowerCase.sorted
 
   private def isAnagrams(test: Set[String], key: String) = test forall (_.sorted == key)

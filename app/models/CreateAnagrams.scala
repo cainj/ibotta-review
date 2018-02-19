@@ -1,11 +1,11 @@
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Reads}
 
 case class CreateAnagrams(words: Set[String])
 
 object CreateAnagrams {
 
-  implicit val reads = Json.reads[CreateAnagrams]
+  implicit val reads: Reads[CreateAnagrams] = Json.reads[CreateAnagrams]
 
 }

@@ -70,12 +70,12 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
   }
 
   /**
-    * Gets the anagrams
-    *
-    * @param word The word.
-    * @param limit The number of anagrams to get.
-    * @return
-    */
+   * Gets the anagrams
+   *
+   * @param word The word.
+   * @param limit The number of anagrams to get.
+   * @return
+   */
   def get(word: String, limit: Option[Int] = None): Future[Anagrams] = {
     val promise: Promise[Anagrams] = Promise.apply()
     val f = promise.future
@@ -94,11 +94,11 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
   }
 
   /**
-    * Stores the words in the corpus
-    *
-    * @param words The list of anagrams
-    * @return
-    */
+   * Stores the words in the corpus
+   *
+   * @param words The list of anagrams
+   * @return
+   */
   def store(words: Anagrams): Future[Boolean] = {
     val promise: Promise[Boolean] = Promise.apply()
     val f = promise.future

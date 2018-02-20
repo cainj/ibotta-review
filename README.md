@@ -129,7 +129,7 @@ Install sbt
 Then run sbt.
 
     cd ibotta-review
-    sbt run ( or sbt if you have it setup)
+    sbt run
     open http://localhost:9000
 
 ##  Postman Docs and Production

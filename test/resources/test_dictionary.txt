@@ -5,6 +5,7 @@ bar
 bare
 bear
 foo
+Eat
 eat
 dare
 dear

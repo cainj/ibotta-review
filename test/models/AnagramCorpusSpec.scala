@@ -31,13 +31,14 @@ class AnagramCorpusSpec extends TestKit(ActorSystem("AnagramCorpusSpec")) with I
       val corpus = app.actorSystem.actorOf(AnagramCorpus.props(new Dictionary(app.configuration)))
       Await.result((corpus ? CreateAnagrams(Set("read", "dare", "dear"))).mapTo[Boolean], Duration(5, "seconds")) mustBe true
       //ignores case
-      Await.result((corpus ? CreateAnagrams(Set("teaL", "tAle"))).mapTo[Boolean], Duration(5, "seconds")) mustBe true
+      assertThrows[IllegalArgumentException] {
+        Await.result((corpus ? CreateAnagrams(Set("teaL", "tAle"))).mapTo[Boolean], Duration(5, "seconds")) mustBe true
+      }
     }
 
     "Check to see if they are valid anagrams" in {
       val corpus = app.actorSystem.actorOf(AnagramCorpus.props(new Dictionary(app.configuration)))
       Await.result((corpus ? CheckAnagrams(Set("read", "dare", "dear"))).mapTo[Boolean], Duration(5, "seconds")) mustBe true
-      //ignores case
       Await.result((corpus ? CheckAnagrams(Set("teal", "let"))).mapTo[Boolean], Duration(5, "seconds")) mustBe false
     }
 

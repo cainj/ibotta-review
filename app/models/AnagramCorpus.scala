@@ -103,10 +103,9 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
     val promise: Promise[Boolean] = Promise.apply()
     val f = promise.future
 
-    val lowerCase = words.map(_.toLowerCase)
     //validate that they are english words
-
-    if (lowerCase.forall(dictionary.valid)) {
+    if (words.forall(dictionary.valid)) {
+      val lowerCase = words.map(_.toLowerCase)
       //validate that they are anagrams
       val key = lowerCase.head.sorted
       if (isAnagrams(lowerCase, key)) {

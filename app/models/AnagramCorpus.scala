@@ -7,7 +7,6 @@ import akka.pattern.{ ask, pipe }
 import akka.util.Timeout
 
 import language.postfixOps
-import scala.concurrent.{ Future, Promise }
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
@@ -26,83 +25,50 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
   implicit val timeout: Timeout = 5.seconds
 
   override def receive = {
-    case CreateAnagrams(words) => store(words) pipeTo sender
-    case Reset => reset pipeTo sender
+    case CreateAnagrams(words) => sender ! store(words)
+    case Reset => sender ! reset
     case GetStats => (analyzer ? GetStats) pipeTo sender
-    case Delete(word) => deleteWord(word) pipeTo sender
+    case Delete(word) => sender ! deleteWord(word)
     case MaxAnagrams => (analyzer ? MaxAnagrams) pipeTo sender
-    case GetAnagrams(word, limit) => get(word, limit) pipeTo sender
-    case DeleteAnagrams(word) => deleteAnagrams(word) pipeTo sender
-    case FilterBySize(size) => filter(size) pipeTo sender
+    case GetAnagrams(word, limit) => sender ! get(word, limit)
+    case DeleteAnagrams(word) => sender ! deleteAnagrams(word)
+    case FilterBySize(size) => sender ! filter(size)
     case Corpus => sender ! store.values
     case CheckAnagrams(words: Set[String]) =>
       val lowerCase = words.map(_.toLowerCase)
       sender ! isAnagrams(lowerCase, lowerCase.head.sorted)
   }
 
-  def filter(size: Int) = {
-    val promise: Promise[Iterable[models.Anagrams]] = Promise.apply()
-    val f = promise.future
-    val anagrams = store.values.filter(_.size >= size) map { Anagrams(_) }
-    promise success anagrams
-    f
-  }
+  def filter(size: Int) = store.values.filter(_.size >= size) map { Anagrams(_) }
 
-  def deleteWord(word: String): Future[Boolean] = {
-    val promise: Promise[Boolean] = Promise.apply()
-    val f = promise.future
+  def deleteWord(word: String): Boolean = {
     val anagrams = findAnagrams(word, delete = true)
     if (anagrams.nonEmpty) store = store + (key(word) -> anagrams)
     else store = store - key(word)
     analyzer ! Analyze(store)
-    promise success !anagrams.contains(word)
-    f
+    !anagrams.contains(word)
   }
 
-  def deleteAnagrams(word: String): Future[Boolean] = {
-    val promise: Promise[Boolean] = Promise.apply()
-    val f = promise.future
+  def deleteAnagrams(word: String): Boolean = {
     val k = key(word)
     store = store - k
     analyzer ! Analyze(store)
-    promise success !store.isDefinedAt(k)
-    f
+    !store.isDefinedAt(k)
   }
 
-  /**
-   * Gets the anagrams
-   *
-   * @param word The word.
-   * @param limit The number of anagrams to get.
-   * @return
-   */
-  def get(word: String, limit: Option[Int] = None): Future[Anagrams] = {
-    val promise: Promise[Anagrams] = Promise.apply()
-    val f = promise.future
+  def get(word: String, limit: Option[Int] = None): Anagrams = {
     val anagrams = findAnagrams(word)
-    promise success (anagrams take limit.getOrElse(anagrams.size))
-    f
+    anagrams take limit.getOrElse(anagrams.size)
   }
 
-  def reset: Future[Boolean] = {
-    val promise: Promise[Boolean] = Promise.apply()
-    val f = promise.future
+  def reset: Boolean = {
     store = Map.empty[String, Anagrams]
     analyzer ! Analyze(store)
-    promise success store.isEmpty
-    f
+    store.isEmpty
   }
 
-  /**
-   * Stores the words in the corpus
-   *
-   * @param words The list of anagrams
-   * @return
-   */
-  def store(words: Anagrams): Future[Boolean] = {
-    val promise: Promise[Boolean] = Promise.apply()
-    val f = promise.future
-
+  def store(words: Anagrams): Boolean = {
+    var stored = false
     //validate that they are english words
     if (words.forall(dictionary.valid)) {
       val lowerCase = words.map(_.toLowerCase)
@@ -111,10 +77,10 @@ class AnagramCorpus @Inject() (dictionary: Dictionary) extends Actor {
       if (isAnagrams(lowerCase, key)) {
         store = store + (key -> words)
         analyzer ! Analyze(store)
-        promise success true
+        stored = true
       } else sender() ! akka.actor.Status.Failure(new IllegalStateException("Doesn't satisfy anagrams.  https://en.wikipedia.org/wiki/Anagram"))
     } else sender() ! akka.actor.Status.Failure(new IllegalArgumentException("Invalid word found in the list."))
-    f
+    stored
   }
 
   private[this] def key(word: String) = word.toLowerCase.sorted

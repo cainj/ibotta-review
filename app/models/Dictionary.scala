@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import play.api.Configuration
 
+import scala.collection.immutable.HashMap
 import scala.io.Source
 
 /**
@@ -13,9 +14,10 @@ import scala.io.Source
  */
 class Dictionary @Inject() (config: Configuration) {
 
-  private[this] val dictionary = new scala.collection.mutable.HashMap[String, String]()
-
-  load(Source.fromInputStream(getClass.getResourceAsStream(config.get[String]("dictionary.file"))).getLines())
+  private[this] val words = Source.fromInputStream(getClass.getResourceAsStream(config.get[String]("dictionary.file"))).getLines()
+  private[this] val dictionary = words.foldLeft(HashMap.empty[String, String]) { (accum, next) =>
+    accum + (next -> next)
+  }
 
   /**
    * Checks to see if the word valid.
@@ -29,11 +31,5 @@ class Dictionary @Inject() (config: Configuration) {
     else
       dictionary.get(word).isDefined
   }
-
-  /**
-   * Loads the words into a map by the hashcode.
-   * @param words The iterator of words
-   */
-  private[this] def load(words: Iterator[String]): Unit = words.foreach { word => dictionary += (word -> word) }
 
 }
